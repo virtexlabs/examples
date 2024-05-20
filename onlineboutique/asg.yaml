@@ -1,0 +1,126 @@
+apiVersion: virtex.ai/v1
+kind: VoithosAutoscalingGroup
+metadata:
+  name: "onlineboutique"
+spec:
+  selector:
+    kinds:
+    - "Deployment"
+    namespaces:
+      operator: In
+      values:
+      - "onlineboutique1"
+    workloads:
+      operator: NotIn
+      values:
+      - "redis-cart"
+  configuration:
+    patching:
+      schedule: "1h"
+      allowReactiveUpdates: true
+    resources:
+      containers:
+      - resources:
+          requests:
+            cpu:
+              enablePatching: true
+              min: 10m
+              max: "2"
+              target:
+                utilization: 80
+            memory:
+              enablePatching: true
+              min: 50Mi
+              max: 4Gi
+              target:
+                percentile: 99
+                bufferPercentage: 30
+          limits:
+            cpu:
+              enablePatching: true
+              min: 50m
+              target:
+                requestsRatio: 3.0
+            memory:
+              enablePatching: true
+              min: 250Mi
+              target:
+                requestsRatio: 3.0
+      horizontalPodAutoscalers:
+      - name: "keda-hpa-currencyservice"
+        metrics:
+        - type: Resource
+          resource:
+            name: "cpu"
+            target:
+              type: Utilization
+              averageUtilization:
+                enablePatching: true
+        - type: ContainerResource
+          containerResource:
+            name: "memory"
+            target:
+              type: AverageValue
+              averageValue:
+                enablePatching: true
+      - metrics:
+        - type: Resource
+          resource:
+            name: cpu
+            target:
+              type: Utilization
+              averageUtilization:
+                enablePatching: true
+                min: 40
+        - type: Resource
+          resource:
+            name: cpu
+            target:
+              type: AverageValue
+              averageValue:
+                enablePatching: true
+        - type: ContainerResource
+          resource:
+            name: cpu
+            target:
+              type: Utilization
+              averageUtilization:
+                enablePatching: true
+                min: 40
+        - type: ContainerResource
+          resource:
+            name: cpu
+            target:
+              type: AverageValue
+              averageValue:
+                enablePatching: true
+        - type: Resource
+          resource:
+            name: memory
+            target:
+              type: Utilization
+              averageUtilization:
+                enablePatching: true
+                min: 30
+        - type: Resource
+          resource:
+            name: memory
+            target:
+              type: AverageValue
+              averageValue:
+                enablePatching: true
+        - type: ContainerResource
+          resource:
+            name: memory
+            target:
+              type: Utilization
+              averageUtilization:
+                enablePatching: true
+                min: 30
+        - type: ContainerResource
+          resource:
+            name: memory
+            target:
+              type: AverageValue
+              averageValue:
+                enablePatching: true

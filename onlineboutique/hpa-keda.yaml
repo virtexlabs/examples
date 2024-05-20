@@ -1,0 +1,133 @@
+# apiVersion: keda.sh/v1alpha1
+# kind: ScaledObject
+# metadata:
+#   name: adservice
+# spec:
+#   minReplicaCount: 1
+#   maxReplicaCount: 4
+#   scaleTargetRef:
+#     apiVersion: apps/v1
+#     kind: Deployment
+#     name: adservice
+#   triggers:
+#   - type: cpu
+#     metricType: Utilization
+#     metadata:
+#       value: "40"
+# ---
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: emailservice
+spec:
+  minReplicaCount: 1
+  maxReplicaCount: 5
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: emailservice
+  triggers:
+  - type: cpu
+    metricType: Utilization
+    metadata:
+      value: "50"
+---
+# apiVersion: keda.sh/v1alpha1
+# kind: ScaledObject
+# metadata:
+#   name: frontend
+# spec:
+#   minReplicaCount: 1
+#   maxReplicaCount: 10
+#   scaleTargetRef:
+#     apiVersion: apps/v1
+#     kind: Deployment
+#     name: frontend
+#   triggers:
+#   - type: cpu
+#     metricType: Utilization
+#     metadata:
+#       value: "85"
+# ---
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: paymentservice
+spec:
+  minReplicaCount: 1
+  maxReplicaCount: 3
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: paymentservice
+  triggers:
+  - type: cpu
+    metricType: Utilization
+    metadata:
+      value: "70"
+  - type: memory
+    metricType: Utilization
+    metadata:
+      containerName: "server"
+      value: "70"
+---
+# apiVersion: keda.sh/v1alpha1
+# kind: ScaledObject
+# metadata:
+#   name: shippingservice
+# spec:
+#   minReplicaCount: 1
+#   maxReplicaCount: 5
+#   scaleTargetRef:
+#     apiVersion: apps/v1
+#     kind: Deployment
+#     name: shippingservice
+#   triggers:
+#   - type: memory
+#     metricType: AverageValue
+#     metadata:
+#       value: "1024000"
+# ---
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: currencyservice
+spec:
+  minReplicaCount: 1
+  maxReplicaCount: 10
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: currencyservice
+  triggers:
+  - type: memory
+    metricType: AverageValue
+    metadata:
+      containerName: "server"
+      value: "200Mi"
+  - type: cpu
+    metricType: Utilization
+    metadata:
+      value: "60"
+# ---
+# apiVersion: keda.sh/v1alpha1
+# kind: ScaledObject
+# metadata:
+#   name: productcatalogservice
+# spec:
+#   minReplicaCount: 2
+#   maxReplicaCount: 4
+#   scaleTargetRef:
+#     apiVersion: apps/v1
+#     kind: Deployment
+#     name: productcatalogservice
+#   triggers:
+#   - type: cpu
+#     metricType: Utilization
+#     metadata:
+#       value: "50"
+#   - type: memory
+#     metricType: Utilization
+#     metadata:
+#       containerName: "server"
+#       value: "40"
